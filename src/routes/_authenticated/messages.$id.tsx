@@ -148,11 +148,10 @@ function ChatPage() {
   );
 }
 
-function Avatar({ url, name, size = 10 }: { url: string | null; name: string; size?: number }) {
-  const cls = `size-${size}`;
-  if (url) return <img src={url} alt="" className={`${cls} rounded-full object-cover`} />;
+function Avatar({ url, name }: { url: string | null; name: string; size?: number }) {
+  if (url) return <img src={url} alt="" className="size-9 rounded-full object-cover" />;
   return (
-    <div className={`${cls} bg-gradient-brand grid place-items-center rounded-full font-display text-sm font-bold text-white`}>
+    <div className="bg-gradient-brand grid size-9 place-items-center rounded-full font-display text-sm font-bold text-white">
       {name.slice(0, 1).toUpperCase()}
     </div>
   );
