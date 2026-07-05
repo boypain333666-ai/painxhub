@@ -95,7 +95,7 @@ function ChatPage() {
         <Link to="/messages" className="grid size-8 place-items-center rounded-full hover:bg-white/5">
           <ArrowLeft className="size-4" />
         </Link>
-        <Avatar url={peerQ.data?.avatar_url ?? null} name={peerQ.data?.display_name ?? peerQ.data?.username ?? "?"} size={9} />
+        <Avatar url={peerQ.data?.avatar_url ?? null} name={peerQ.data?.display_name ?? peerQ.data?.username ?? "?"} />
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-semibold">{peerQ.data?.display_name ?? peerQ.data?.username ?? "Chat"}</div>
           <div className="truncate text-xs text-muted-foreground">@{peerQ.data?.username}</div>
