@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, BadgeCheck, Shield } from "lucide-react";
+import { VerifiedBadge } from "@/components/verified-badge";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
@@ -77,10 +78,25 @@ function ProfilePage() {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1 font-display text-lg font-bold">
               <span className="truncate">{p.display_name ?? p.username}</span>
-              {p.verified && <CheckCircle2 className="size-4 text-brand-purple" />}
+              {p.verified && <VerifiedBadge size={16} />}
             </div>
             <div className="text-sm text-muted-foreground">@{p.username}</div>
           </div>
+        </div>
+        <div className="mt-4 flex gap-2">
+          <Link
+            to="/verify"
+            className="glass flex flex-1 items-center justify-center gap-1.5 rounded-full py-2 text-xs font-semibold"
+          >
+            <BadgeCheck className="size-3.5 text-brand-red" />
+            {p.verified ? "Verified" : "Get verified"}
+          </Link>
+          <Link
+            to="/admin"
+            className="glass flex flex-1 items-center justify-center gap-1.5 rounded-full py-2 text-xs font-semibold"
+          >
+            <Shield className="size-3.5" /> Admin
+          </Link>
         </div>
       </div>
 

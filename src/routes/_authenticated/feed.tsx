@@ -5,6 +5,7 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { Heart, MessageCircle, Send, Loader2, LogOut, Plus, Bookmark } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { VerifiedBadge } from "@/components/verified-badge";
 
 export const Route = createFileRoute("/_authenticated/feed")({
   component: FeedPage,
@@ -252,7 +253,7 @@ function FeedPage() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1 text-sm font-semibold">
                     <span className="truncate">{p.profiles?.display_name ?? p.profiles?.username}</span>
-                    {p.profiles?.verified && <span className="text-brand-purple">✓</span>}
+                    {p.profiles?.verified && <VerifiedBadge size={13} />}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     @{p.profiles?.username} · {formatDistanceToNowStrict(new Date(p.created_at))} ago
