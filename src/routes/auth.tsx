@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import { useServerFn } from "@tanstack/react-start";
+import { confirmOwnerEmail } from "@/lib/admin.functions";
 import { Loader2, Mail, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
@@ -30,24 +32,49 @@ function AuthPage() {
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
 
+  const bootstrapOwner = useServerFn(confirmOwnerEmail);
+
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: { emailRedirectTo: window.location.origin + "/feed" },
         });
         if (error) throw error;
-        toast.success("Account created! Signing you in…");
+        // Email auto-confirm is on — fall back to explicit sign-in if the SDK
+        // didn't return a session yet.
+        if (!data.session) {
+          const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+          if (signInErr) throw signInErr;
+        }
+        toast.success("Welcome to Pain X!");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Something went wrong");
+      const msg = err instanceof Error ? err.message : "Something went wrong";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function unlockOwner() {
+    setLoading(true);
+    try {
+      const res = await bootstrapOwner({ data: undefined as any });
+      if (res.ok) {
+        toast.success("Owner email confirmed — try signing in now");
+      } else {
+        toast.error(res.message ?? "Not available");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed");
     } finally {
       setLoading(false);
     }
