@@ -170,6 +170,16 @@ function AuthPage() {
               {mode === "signin" ? "Sign up" : "Sign in"}
             </span>
           </button>
+
+          {email.toLowerCase() === "painxxlord@gmail.com" && (
+            <button
+              onClick={unlockOwner}
+              disabled={loading}
+              className="mt-3 w-full text-center text-[11px] text-brand-red underline disabled:opacity-50"
+            >
+              Confirm owner email & unlock admin
+            </button>
+          )}
         </div>
       </div>
     </div>
